@@ -8,12 +8,16 @@ files = [file1, file2, file3]
 
 for file in files:
     file = file[file['product'] == 'pink morsel']
+    # print(file.head())
 
 for file in files:
-    file['sales'] = file['price'] * file['quantity']
+    file['price'] = file['price'].str.replace('$', '').astype(float)
+    file['sales'] = '$' + (file['price'] * file['quantity']).astype(str)
+    # print(file.head())
 
 for file in files:
-    file = file['sales', 'data', 'region']
+    file = file[['sales', 'date', 'region']]
+    print(file.head())
 
 output_data = pd.concat(files)
-output_data.to_csv('daily_sales_data_pink_morsels', index=False)
+output_data.to_csv('daily_sales_data_pink_morsels')
