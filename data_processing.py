@@ -1,23 +1,34 @@
-import pandas as pd
+import csv
+import os
 
-file1 = pd.read_csv('data/daily_sales_data_0.csv')
-file2 = pd.read_csv('data/daily_sales_data_1.csv')
-file3 = pd.read_csv('data/daily_sales_data_2.csv')
+input_folder = 'data'
+output_file = 'data_sales_data_pink_morsel'
 
-files = [file1, file2, file3]
+combined_data = []
 
-for file in files:
-    file = file[file['product'] == 'pink morsel']
-    # print(file.head())
+for filename in os.listdir(input_folder):
+    if filename.endswith('.csv'):
+        file_path = os.path.join(input_folder, filename)
 
-for file in files:
-    file['price'] = file['price'].str.replace('$', '').astype(float)
-    file['sales'] = '$' + (file['price'] * file['quantity']).astype(str)
-    # print(file.head())
+        with open(file_path, 'r') as file:
+            reader = csv.DictReader(file)
 
-for file in files:
-    file = file[['sales', 'date', 'region']]
-    print(file.head())
+            for row in reader:
+                if row['product'] == 'pink morsel':
+                    row['price'] = float(row['price'][1:])
+                    row['sales'] = row['price'] * float(row['quantity'])
 
-output_data = pd.concat(files)
-output_data.to_csv('daily_sales_data_pink_morsels')
+                    combined_data.append(row)
+
+combined_data.sort(key=lambda x:x['date'])
+
+output_data = [
+    {'sales': row['sales'], 'date': row['date'], 'region': row['region']}
+    for row in combined_data
+    ]
+
+with open(output_file, 'w', newline='') as file:
+    fieldnames = ['sales', 'date', 'region']
+    writer = csv.DictWriter(file, fieldnames=fieldnames);
+    writer.writeheader()
+    writer.writerows(output_data)
