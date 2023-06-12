@@ -36,6 +36,10 @@ app.layout = html.Div(
         html.Div(style={'color': '#006d77'}, children='''
            The answer is obvious...YES!!
         '''),
+        dcc.Graph(
+            id='pink-morsel-sale',
+            figure=fig
+        ),
         dcc.RadioItems(
             id='region-button',
             options=[
@@ -46,12 +50,10 @@ app.layout = html.Div(
                 {'label': 'All', 'value': 'all'}
             ],
             value='all',  # Default selected value
-            labelStyle={'display': 'inline-block', 'padding-top': '50px'}
-        ),
-        dcc.Graph(
-            id='pink-morsel-sale',
-            figure=fig
+            labelStyle={'display': 'inline-block', 'color': '#83c5be'},
+            style={'textAlign': 'center'}
         )
+
     ]
 )
 
